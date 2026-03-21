@@ -1,8 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:speech_to_text/speech_to_text.dart';
-import 'dart:io';
 
 class ReportIssueScreen extends StatefulWidget {
   const ReportIssueScreen({super.key});
@@ -14,41 +14,22 @@ class ReportIssueScreen extends StatefulWidget {
 class _ReportIssueScreenState extends State<ReportIssueScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  // 🎤 Description Controller
-  final TextEditingController descriptionController = TextEditingController();
+  // 📷 Image
+  File? image;
+
+  // 📍 Location
+  String locationText = "Location not captured";
+
+  // 🎤 Speech
+  final SpeechToText speech = SpeechToText();
   bool isListening = false;
-  late SpeechToText speech;
 
-  @override
-  void initState() {
-    super.initState();
-    speech = SpeechToText();
-  }
-
-  void toggleRecording() async {
-    if (!isListening) {
-      bool available = await speech.initialize();
-
-      if (available) {
-        setState(() => isListening = true);
-
-        speech.listen(
-          onResult: (result) {
-            setState(() {
-              descriptionController.text = result.recognizedWords;
-            });
-          },
-        );
-      }
-    } else {
-      setState(() => isListening = false);
-      speech.stop();
-    }
-  }
+  // 📝 Description
+  final TextEditingController descriptionController =
+      TextEditingController();
 
   // 📂 Category
   String selectedCategory = "Garbage";
-
   final List<String> categories = [
     "Garbage",
     "Road Damage",
@@ -56,14 +37,11 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
     "Street Light",
   ];
 
-  // 📷 Image + 📍 Location
-  File? image;
-  String locationText = "Location not captured";
-
+  // 📷 Capture Image + Location
   Future<void> captureImageAndLocation() async {
-    final picker = ImagePicker();
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
 
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
     if (pickedFile == null) return;
 
     LocationPermission permission = await Geolocator.requestPermission();
@@ -75,13 +53,33 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
     }
 
     Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
+        desiredAccuracy: LocationAccuracy.high);
 
     setState(() {
       image = File(pickedFile.path);
-      locationText = "Lat: ${position.latitude}, Lng: ${position.longitude}";
+      locationText =
+          "Lat: ${position.latitude}, Lng: ${position.longitude}";
     });
+  }
+
+  // 🎤 Mic Toggle
+  void toggleRecording() async {
+    if (!isListening) {
+      bool available = await speech.initialize();
+
+      if (available) {
+        setState(() => isListening = true);
+
+        speech.listen(onResult: (result) {
+          setState(() {
+            descriptionController.text = result.recognizedWords;
+          });
+        });
+      }
+    } else {
+      speech.stop();
+      setState(() => isListening = false);
+    }
   }
 
   @override
@@ -104,28 +102,45 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 📷 Animated Camera UI
-              AnimatedCaptureBox(image: image, onTap: captureImageAndLocation),
+                // 📷 Camera Box (Centered)
+                Center(
+                  child: AnimatedCaptureBox(
+                    image: image,
+                    onTap: captureImageAndLocation,
+                  ),
+                ),
 
               const SizedBox(height: 10),
 
               // 📍 Location
-              Text(locationText, style: const TextStyle(color: Colors.grey)),
+              Row(
+                children: [
+                  const Icon(Icons.location_on, color: Colors.grey),
+                  const SizedBox(width: 5),
+                  Expanded(
+                    child: Text(
+                      locationText,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                ],
+              ),
 
               const SizedBox(height: 20),
 
               // 📂 Category
-              const Text(
-                "Category",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+              const Text("Category",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
 
               const SizedBox(height: 10),
 
               DropdownButtonFormField<String>(
                 initialValue: selectedCategory,
                 items: categories
-                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .map((e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e),
+                        ))
                     .toList(),
                 onChanged: (value) {
                   setState(() {
@@ -134,8 +149,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                 },
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                      borderRadius: BorderRadius.circular(10)),
                 ),
               ),
 
@@ -153,17 +167,9 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                   return null;
                 },
                 decoration: InputDecoration(
-                  label: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text("Description"),
-                      SizedBox(width: 5),
-                      Icon(Icons.mic, size: 16, color: Colors.grey),
-                    ],
-                  ),
+                  hintText: "Description",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                      borderRadius: BorderRadius.circular(10)),
                   suffixIcon: IconButton(
                     icon: Icon(
                       isListening ? Icons.mic : Icons.mic_none,
@@ -176,7 +182,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 
               const SizedBox(height: 30),
 
-              // 🚀 Submit
+              // 🚀 Submit Button
               AnimatedSubmitButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate() && image != null) {
@@ -185,7 +191,8 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                     );
                   } else if (image == null) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Please capture an image")),
+                      const SnackBar(
+                          content: Text("Please capture an image")),
                     );
                   }
                 },
@@ -201,7 +208,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 //
 // 📷 Animated Capture Box
 //
-class AnimatedCaptureBox extends StatefulWidget {
+class AnimatedCaptureBox extends StatelessWidget {
   final File? image;
   final VoidCallback onTap;
 
@@ -212,84 +219,50 @@ class AnimatedCaptureBox extends StatefulWidget {
   });
 
   @override
-  State<AnimatedCaptureBox> createState() => _AnimatedCaptureBoxState();
-}
-
-class _AnimatedCaptureBoxState extends State<AnimatedCaptureBox> {
-  double scale = 1.0;
-
-  void _onTapDown(_) => setState(() => scale = 0.96);
-  void _onTapUp(_) => setState(() => scale = 1.0);
-
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapDown: _onTapDown,
-      onTapUp: _onTapUp,
-      onTapCancel: () => setState(() => scale = 1.0),
-      onTap: widget.onTap,
-      child: AnimatedScale(
-        duration: const Duration(milliseconds: 150),
-        scale: scale,
-        child: Container(
-          height: 220,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            gradient: widget.image == null
-                ? const LinearGradient(
-                    colors: [Color(0xFFE3F2FD), Color(0xFFBBDEFB)],
-                  )
-                : null,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.15),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: widget.image == null
-              ? const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.camera_alt, size: 60, color: Colors.blue),
-                    SizedBox(height: 10),
-                    Text(
-                      "Capture Issue Image",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      "Tap to open camera",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ],
+      onTap: onTap,
+      child: Container(
+        height: 220,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          gradient: image == null
+              ? const LinearGradient(
+                  colors: [Color(0xFFE3F2FD), Color(0xFFBBDEFB)],
                 )
-              : Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.file(
-                        widget.image!,
-                        width: double.infinity,
-                        height: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 10,
-                      right: 10,
-                      child: IconButton(
-                        icon: const Icon(Icons.camera_alt, color: Colors.white),
-                        onPressed: widget.onTap,
-                      ),
-                    ),
-                  ],
-                ),
+              : null,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
         ),
+        child: image == null
+            ? const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.camera_alt, size: 60, color: Colors.blue),
+                  SizedBox(height: 10),
+                  Text("Capture Issue Image",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue)),
+                  SizedBox(height: 5),
+                  Text("Tap to open camera",
+                      style: TextStyle(color: Colors.grey)),
+                ],
+              )
+            : ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.file(
+                  image!,
+                  width: double.infinity,
+                  height: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
       ),
     );
   }
@@ -298,56 +271,31 @@ class _AnimatedCaptureBoxState extends State<AnimatedCaptureBox> {
 //
 // 🔘 Animated Submit Button
 //
-class AnimatedSubmitButton extends StatefulWidget {
+class AnimatedSubmitButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const AnimatedSubmitButton({super.key, required this.onPressed});
 
   @override
-  State<AnimatedSubmitButton> createState() => _AnimatedSubmitButtonState();
-}
-
-class _AnimatedSubmitButtonState extends State<AnimatedSubmitButton> {
-  double scale = 1.0;
-
-  void _onTapDown(_) => setState(() => scale = 0.95);
-  void _onTapUp(_) => setState(() => scale = 1.0);
-
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapDown: _onTapDown,
-      onTapUp: _onTapUp,
-      onTapCancel: () => setState(() => scale = 1.0),
-      onTap: widget.onPressed,
-      child: AnimatedScale(
-        duration: const Duration(milliseconds: 150),
-        scale: scale,
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF0D47A1), Color(0xFF1976D2)],
-            ),
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.blue.withOpacity(0.4),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
+      onTap: onPressed,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF0D47A1), Color(0xFF1976D2)],
           ),
-          alignment: Alignment.center,
-          child: const Text(
-            "Submit Issue",
-            style: TextStyle(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        alignment: Alignment.center,
+        child: const Text(
+          "Submit Issue",
+          style: TextStyle(
               color: Colors.white,
               fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+              fontWeight: FontWeight.bold),
         ),
       ),
     );

@@ -7,6 +7,87 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+  child: ListView(
+    padding: EdgeInsets.zero,
+    children: [
+
+      // 🔵 HEADER
+      UserAccountsDrawerHeader(
+        accountName: const Text("Citizen"),
+        accountEmail: const Text("test@gmail.com"),
+        currentAccountPicture: CircleAvatar(
+          backgroundColor: Colors.white,
+          child: Icon(Icons.person, size: 40, color: Colors.blue),
+        ),
+        decoration: const BoxDecoration(
+          color: Color(0xFF1565C0),
+        ),
+      ),
+
+      // 🏠 Dashboard
+      ListTile(
+        leading: const Icon(Icons.dashboard),
+        title: const Text("Dashboard"),
+        onTap: () {
+          Navigator.pop(context);
+        },
+      ),
+
+      // 📸 Report Issue
+      ListTile(
+        leading: const Icon(Icons.report_problem),
+        title: const Text("Report Issue"),
+        onTap: () {
+          Navigator.pop(context);
+          Navigator.pushNamed(context, '/report');
+        },
+      ),
+
+      // 📄 My Reports
+      ListTile(
+        leading: const Icon(Icons.list_alt),
+        title: const Text("My Reports"),
+        onTap: () {
+          Navigator.pop(context);
+        },
+      ),
+
+      // 🗺 Map View
+      ListTile(
+        leading: const Icon(Icons.map),
+        title: const Text("Map View"),
+        onTap: () {
+          Navigator.pop(context);
+        },
+      ),
+
+      const Divider(),
+
+      // ⚙️ Settings
+      ListTile(
+        leading: const Icon(Icons.settings),
+        title: const Text("Settings"),
+        onTap: () {
+          Navigator.pop(context);
+        },
+      ),
+
+      // 🚪 Logout
+      ListTile(
+        leading: const Icon(Icons.logout, color: Colors.red),
+        title: const Text(
+          "Logout",
+          style: TextStyle(color: Colors.red),
+        ),
+        onTap: () {
+          Navigator.pop(context);
+          Navigator.pushReplacementNamed(context, '/');
+        },
+      ),
+    ],
+  ),
+),
       appBar: AppBar(
         title: const Text("Citizen Dashboard"),
         backgroundColor: const Color(0xFF1565C0),

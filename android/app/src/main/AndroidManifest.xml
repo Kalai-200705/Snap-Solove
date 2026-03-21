@@ -2,6 +2,8 @@
 package="com.example.snap_solve">
 <uses-permission android:name="android.permission.CAMERA"/>
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+<uses-permission android:name="android.permission.CAMERA"/>
+<uses-permission android:name="android.permission.RECORD_AUDIO"/>  
     <application
         android:label="snap_solve"
         android:name="${applicationName}"
