@@ -1,156 +1,199 @@
 import 'package:flutter/material.dart';
 
-class EmployeeLoginScreen extends StatefulWidget {
-  const EmployeeLoginScreen({super.key});
-
+class EmployeeLoginPage extends StatefulWidget {
   @override
-  State<EmployeeLoginScreen> createState() => _EmployeeLoginScreenState();
+  State<EmployeeLoginPage> createState() => _EmployeeLoginPageState();
 }
 
-class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+class _EmployeeLoginPageState extends State<EmployeeLoginPage> {
+  final _formKey = GlobalKey<FormState>();
 
-  double scale = 1.0;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
-  void _onTapDown(_) => setState(() => scale = 0.95);
-  void _onTapUp(_) => setState(() => scale = 1.0);
+  bool isPasswordVisible = false;
+  bool isLoading = false;
+  String error = "";
 
-  void login() {
-    String email = emailController.text;
-    String password = passwordController.text;
+  void login() async {
+    if (!_formKey.currentState!.validate()) return;
 
-    // 🔐 Simple Demo Login
-    if (email == "employee@gmail.com" && password == "123456") {
-      Navigator.pushReplacementNamed(context, '/employee-dashboard');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Invalid Employee Credentials")),
+    setState(() {
+      isLoading = true;
+      error = "";
+    });
+
+    await Future.delayed(Duration(seconds: 1));
+
+    if (emailController.text == "emp@demo.com" &&
+        passwordController.text == "1234") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => DummyDashboard()),
       );
+    } else {
+      setState(() {
+        error = "Invalid email or password";
+      });
     }
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF1565C0), Color(0xFF42A5F5)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+      backgroundColor: Colors.blue,
+      body: SafeArea(
         child: Column(
           children: [
+            SizedBox(height: 30),
 
-            const SizedBox(height: 100),
+            Icon(Icons.engineering, size: 80, color: Colors.white),
 
-            // 🧑‍🔧 ICON
-            const Icon(Icons.engineering,
-                size: 70, color: Colors.white),
+            SizedBox(height: 10),
 
-            const SizedBox(height: 10),
-
-            const Text(
+            Text(
               "Employee Login",
               style: TextStyle(
-                fontSize: 26,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
+                  color: Colors.white,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold),
             ),
 
-            const SizedBox(height: 30),
+            SizedBox(height: 30),
 
-            // 🔲 FORM CARD
             Expanded(
               child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: const BoxDecoration(
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(25),
-                  ),
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(30)),
                 ),
-                child: Column(
-                  children: [
-
-                    // 📧 EMAIL
-                    TextField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.email),
-                        labelText: "Employee Email",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        // EMAIL
+                        TextFormField(
+                          controller: emailController,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.email),
+                            labelText: "Employee Email",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter email";
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                    ),
 
-                    const SizedBox(height: 20),
+                        SizedBox(height: 15),
 
-                    // 🔒 PASSWORD
-                    TextField(
-                      controller: passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.lock),
-                        labelText: "Password",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                        // PASSWORD
+                        TextFormField(
+                          controller: passwordController,
+                          obscureText: !isPasswordVisible,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.lock),
+                            labelText: "Password",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            suffixIcon: IconButton(
+                              icon: Icon(isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  isPasswordVisible = !isPasswordVisible;
+                                });
+                              },
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter password";
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                    ),
 
-                    const SizedBox(height: 30),
+                        SizedBox(height: 10),
 
-                    // 🚀 LOGIN BUTTON WITH ANIMATION
-                    GestureDetector(
-                      onTapDown: _onTapDown,
-                      onTapUp: _onTapUp,
-                      onTapCancel: () => setState(() => scale = 1.0),
-                      onTap: login,
-                      child: AnimatedScale(
-                        duration: const Duration(milliseconds: 150),
-                        scale: scale,
-                        child: Container(
+                        // FORGOT PASSWORD
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {},
+                            child: Text("Forgot Password?"),
+                          ),
+                        ),
+
+                        // ERROR MESSAGE
+                        if (error.isNotEmpty)
+                          Text(error,
+                              style: TextStyle(color: Colors.red)),
+
+                        SizedBox(height: 10),
+
+                        // LOGIN BUTTON
+                        SizedBox(
                           width: double.infinity,
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF0D47A1), Color(0xFF1976D2)],
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: isLoading ? null : login,
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
                             ),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.blue.withOpacity(0.4),
-                                blurRadius: 10,
-                                offset: const Offset(0, 5),
-                              ),
-                            ],
-                          ),
-                          alignment: Alignment.center,
-                          child: const Text(
-                            "Login as Employee",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            child: isLoading
+                                ? CircularProgressIndicator(
+                                    color: Colors.white)
+                                : Text("Login as Employee",
+                                    style: TextStyle(fontSize: 16)),
                           ),
                         ),
-                      ),
-                    ),
 
-                  ],
+                        SizedBox(height: 20),
+
+                        // SIGN UP
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Don't have an account? "),
+                            TextButton(
+                              onPressed: () {},
+                              child: Text("Sign Up"),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+// DUMMY DASHBOARD
+class DummyDashboard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Employee Dashboard")),
+      body: Center(child: Text("Welcome Employee")),
     );
   }
 }

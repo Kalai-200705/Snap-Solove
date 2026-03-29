@@ -1,28 +1,33 @@
 import 'package:flutter/material.dart';
+
 import '../screens/auth/role_selection_screen.dart';
+import '../screens/citizen/citizen_homescreen.dart';
+import '../screens/citizen/citizen_login_screen.dart';
+import '../screens/citizen/citizen_report_issue_screen.dart';
+import '../screens/citizen/forgot_password_screen.dart';
+import '../screens/citizen/issue_detail_screen.dart';
+import '../screens/citizen/signup_screen.dart';
+
+// ignore: unused_import
 import '../screens/employee/employee_login_screen.dart';
-import '../screens/employee/employee_dashboard.dart';
-import '../screens/auth/login_screen.dart';
-import '../screens/citizen/dashboard_screen.dart';
-import '../screens/citizen/report_issue_screen.dart';
-import '../screens/government/government_login_screen.dart';
-import '../screens/government/government_dashboard.dart';
-import '../screens/government/map_view_screen.dart';
 
-class AppRoutes {
-  static Map<String, WidgetBuilder> routes = {
-  '/': (context) => const RoleSelectionScreen(),
+Map<String, WidgetBuilder> routes = {
+  '/': (context) => RoleSelectionScreen(),
 
-  '/login': (context) => const LoginScreen(),
-  '/dashboard': (context) => const DashboardScreen(),
-  '/report': (context) => const ReportIssueScreen(),
+  '/login': (context) => LoginScreen(),
 
-  '/employee-login': (context) => const EmployeeLoginScreen(),
-  '/employee-dashboard': (context) => const EmployeeDashboard(),
+  '/home': (context) => const HomeScreen(),
 
-  // ✅ ADD THIS
-  '/government-login': (context) => const GovernmentLoginScreen(),
-  '/government-dashboard': (context) => const GovernmentDashboard(),
-   '/map-view': (context) => const MapViewScreen(),
+  '/report-issue': (context) => const CitizenReportIssueScreen(),
+
+  '/issue-detail': (context) {
+    final issueType = ModalRoute.of(context)?.settings.arguments as String?;
+    return IssueDetailScreen(issueType: issueType ?? "");
+  },
+
+  '/employee-login': (context) => EmployeeLoginPage(),
+
+  // ✅ ADD THESE
+  '/forgot-password': (context) => ForgotPasswordScreen(),
+  '/signup': (context) => SignupScreen(),
 };
-}

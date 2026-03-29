@@ -13,7 +13,7 @@ class SnapSolveApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
-      routes: AppRoutes.routes, // ✅ THIS IS IMPORTANT
+      routes: routes, // ✅ THIS IS IMPORTANT
     );
   }
 }

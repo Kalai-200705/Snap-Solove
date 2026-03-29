@@ -1,5 +1,7 @@
 class RouteNames {
-  static const login = '/';
   static const dashboard = '/dashboard';
-  static const reportIssue = '/report';
+
+  // ✅ ADD THESE
+  static const forgotPassword = '/forgot-password';
+  static const signup = '/signup';
 }
