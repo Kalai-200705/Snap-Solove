@@ -373,7 +373,15 @@ class _CitizenReportIssueScreenState extends State<CitizenReportIssueScreen> {
   }
 
   void _submit() {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text("Report Submitted")));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Your issue was submitted successfully"),
+        duration: Duration(seconds: 2),
+      ),
+    );
+
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.of(context).pushReplacementNamed('/home');
+    });
   }
 }

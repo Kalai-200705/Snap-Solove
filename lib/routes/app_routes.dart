@@ -25,7 +25,7 @@ Map<String, WidgetBuilder> routes = {
     return IssueDetailScreen(issueType: issueType ?? "");
   },
 
-  '/employee-login': (context) => EmployeeLoginPage(),
+  '/employee-login': (context) => const EmployeeLoginScreen(),
 
   // ✅ ADD THESE
   '/forgot-password': (context) => ForgotPasswordScreen(),

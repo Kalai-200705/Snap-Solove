@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Tracking</title>
+
+<!-- LEAFLET CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    display: flex;
+    background: #f4f6f9;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #1e293b;
+    color: white;
+    padding: 20px;
+    position: fixed;
+}
+
+.sidebar h2 {
+    margin-bottom: 30px;
+}
+
+.sidebar a {
+    display: block;
+    color: #cbd5e1;
+    text-decoration: none;
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.sidebar a:hover {
+    background: #334155;
+}
+
+/* MAIN */
+.main {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+}
+
+/* TOPBAR */
+.topbar {
+    height: 70px;
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* MAP */
+#map {
+    height: calc(100vh - 70px);
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="complaints.html">📋 Complaints</a>
+    <a href="employees.html">👨‍🔧 Employees</a>
+    <a href="tracking.html" class="active">📍 Tracking</a>
+    <a href="reports.html">📊 Reports</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <h3>Live Employee Tracking</h3>
+        <div>Admin</div>
+    </div>
+
+    <!-- MAP -->
+    <div id="map"></div>
+
+</div>
+
+<!-- LEAFLET JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+// Initialize map (center = Tamil Nadu area)
+const map = L.map('map').setView([10.7905, 78.7047], 7);
+
+// Tile layer (map view)
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+}).addTo(map);
+
+// 🔴 ISSUE LOCATION
+const issueLocation = [13.0827, 80.2707]; // Chennai
+
+const issueMarker = L.marker(issueLocation).addTo(map)
+    .bindPopup("<b>Issue Location</b><br>Road Damage - Chennai")
+    .openPopup();
+
+// 🔵 WORKERS DATA
+let workers = [
+    { id: 1, name: "Worker A", coords: [13.05, 80.25] },
+    { id: 2, name: "Worker B", coords: [13.10, 80.28] },
+    { id: 3, name: "Worker C", coords: [13.08, 80.22] }
+];
+
+// Store markers
+let workerMarkers = [];
+
+// Function to render workers
+function renderWorkers() {
+    // Remove old markers
+    workerMarkers.forEach(marker => map.removeLayer(marker));
+    workerMarkers = [];
+
+    // Add updated markers
+    workers.forEach(worker => {
+        let marker = L.marker(worker.coords).addTo(map)
+            .bindPopup(`<b>${worker.name}</b><br>On Task`);
+
+        workerMarkers.push(marker);
+    });
+}
+
+// Initial render
+renderWorkers();
+
+// 🔄 SIMULATE LIVE MOVEMENT
+setInterval(() => {
+    workers = workers.map(worker => {
+        let lat = worker.coords[0] + (Math.random() - 0.5) * 0.01;
+        let lng = worker.coords[1] + (Math.random() - 0.5) * 0.01;
+
+        return {
+            ...worker,
+            coords: [lat, lng]
+        };
+    });
+
+    renderWorkers();
+}, 3000); // update every 3 sec
+
+</script>
+
+</body>
+</html>

@@ -1,91 +1,96 @@
 import 'package:flutter/material.dart';
 
-class EmployeeLoginPage extends StatefulWidget {
+import 'employee_dashboard.dart';
+
+class EmployeeLoginScreen extends StatefulWidget {
+  const EmployeeLoginScreen({super.key});
+
   @override
-  State<EmployeeLoginPage> createState() => _EmployeeLoginPageState();
+  State<EmployeeLoginScreen> createState() => _EmployeeLoginScreenState();
 }
 
-class _EmployeeLoginPageState extends State<EmployeeLoginPage> {
-  final _formKey = GlobalKey<FormState>();
-
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool isPasswordVisible = false;
-  bool isLoading = false;
-  String error = "";
+  String error = '';
 
-  void login() async {
-    if (!_formKey.currentState!.validate()) return;
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
-    setState(() {
-      isLoading = true;
-      error = "";
-    });
-
-    await Future.delayed(Duration(seconds: 1));
-
-    if (emailController.text == "emp@demo.com" &&
-        passwordController.text == "1234") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => DummyDashboard()),
-      );
-    } else {
-      setState(() {
-        error = "Invalid email or password";
-      });
+  void login() {
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      return;
     }
 
     setState(() {
-      isLoading = false;
+      error = '';
     });
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const EmployeeDashboard()),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue,
-      body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(height: 30),
-
-            Icon(Icons.engineering, size: 80, color: Colors.white),
-
-            SizedBox(height: 10),
-
-            Text(
-              "Employee Login",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold),
-            ),
-
-            SizedBox(height: 30),
-
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(30)),
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF1565C0), Color(0xFF42A5F5)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                const SizedBox(height: 40),
+                const Icon(Icons.engineering, size: 90, color: Colors.white),
+                const SizedBox(height: 15),
+                const Text(
+                  "Employee Login",
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-                child: SingleChildScrollView(
+                const SizedBox(height: 5),
+                const Text(
+                  "Login to access dashboard",
+                  style: TextStyle(color: Colors.white70),
+                ),
+                const SizedBox(height: 40),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                   child: Form(
                     key: _formKey,
                     child: Column(
                       children: [
-                        // EMAIL
                         TextFormField(
                           controller: emailController,
                           decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.email),
+                            prefixIcon: const Icon(Icons.email),
                             labelText: "Employee Email",
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12)),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -94,22 +99,22 @@ class _EmployeeLoginPageState extends State<EmployeeLoginPage> {
                             return null;
                           },
                         ),
-
-                        SizedBox(height: 15),
-
-                        // PASSWORD
+                        const SizedBox(height: 15),
                         TextFormField(
                           controller: passwordController,
                           obscureText: !isPasswordVisible,
                           decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.lock),
+                            prefixIcon: const Icon(Icons.lock),
                             labelText: "Password",
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12)),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                             suffixIcon: IconButton(
-                              icon: Icon(isPasswordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off),
+                              icon: Icon(
+                                isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
                               onPressed: () {
                                 setState(() {
                                   isPasswordVisible = !isPasswordVisible;
@@ -124,76 +129,75 @@ class _EmployeeLoginPageState extends State<EmployeeLoginPage> {
                             return null;
                           },
                         ),
-
-                        SizedBox(height: 10),
-
-                        // FORGOT PASSWORD
+                        const SizedBox(height: 10),
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {},
-                            child: Text("Forgot Password?"),
+                            child: const Text("Forgot Password?"),
                           ),
                         ),
-
-                        // ERROR MESSAGE
                         if (error.isNotEmpty)
-                          Text(error,
-                              style: TextStyle(color: Colors.red)),
-
-                        SizedBox(height: 10),
-
-                        // LOGIN BUTTON
-                        SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: ElevatedButton(
-                            onPressed: isLoading ? null : login,
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12)),
+                          Text(
+                            error,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        const SizedBox(height: 15),
+                        GestureDetector(
+                          onTap: login,
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF0D47A1), Color(0xFF1976D2)],
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.blue.withValues(alpha: 0.4),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 5),
+                                ),
+                              ],
                             ),
-                            child: isLoading
-                                ? CircularProgressIndicator(
-                                    color: Colors.white)
-                                : Text("Login as Employee",
-                                    style: TextStyle(fontSize: 16)),
+                            alignment: Alignment.center,
+                            child: const Text(
+                              "Login as Employee",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
-
-                        SizedBox(height: 20),
-
-                        // SIGN UP
+                        const SizedBox(height: 15),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("Don't have an account? "),
+                            const Text("Don't have an account? "),
                             TextButton(
                               onPressed: () {},
-                              child: Text("Sign Up"),
-                            )
+                              child: const Text(
+                                "Sign Up",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
-    );
-  }
-}
-
-// DUMMY DASHBOARD
-class DummyDashboard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Employee Dashboard")),
-      body: Center(child: Text("Welcome Employee")),
     );
   }
 }

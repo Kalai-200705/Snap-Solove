@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    display: flex;
+    background: #f4f6f9;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #1e293b;
+    color: white;
+    padding: 20px;
+    position: fixed;
+}
+
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #1e293b;
+    color: white;
+    padding: 20px;
+    position: fixed;
+}
+
+.sidebar h2 {
+    margin-bottom: 30px;
+}
+
+.sidebar a {
+    display: block;
+    color: #cbd5e1;
+    text-decoration: none;
+    margin: 12px 0;
+    padding: 10px;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background: #334155;
+    color: white;
+}
+
+.sidebar a.active {
+    background: #3b82f6;
+    color: white;
+}
+
+/* MAIN */
+.main {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+}
+
+/* TOPBAR */
+.topbar {
+    height: 70px;
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.admin-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.admin-name {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.logout-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    background: #ef4444;
+    color: white;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    background: #dc2626;
+}
+
+.topbar h3 {
+    color: #1e293b;
+}
+
+.profile {
+    font-weight: 500;
+}
+
+/* DASHBOARD CONTENT */
+.content {
+    padding: 25px;
+}
+
+/* CARDS GRID */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+/* CARD */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h4 {
+    font-size: 14px;
+    color: gray;
+}
+
+.card h2 {
+    margin-top: 10px;
+}
+
+/* COLORS */
+.blue { border-left: 5px solid #3b82f6; }
+.green { border-left: 5px solid #22c55e; }
+.red { border-left: 5px solid #ef4444; }
+.orange { border-left: 5px solid #f59e0b; }
+.purple { border-left: 5px solid #8b5cf6; }
+
+/* STATUS BADGES */
+.status {
+    margin-top: 10px;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.pending { background: #fef3c7; color: #92400e; }
+.progress { background: #dbeafe; color: #1e40af; }
+.completed { background: #dcfce7; color: #166534; }
+
+/* CHART PLACEHOLDER */
+.chart {
+    margin-top: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.chart h3 {
+    margin-bottom: 15px;
+    color: #1e293b;
+}
+
+.charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.chart-box {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.chart-box h4 {
+    margin-bottom: 15px;
+    color: #1e293b;
+    font-size: 16px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="dashboard.html" class="active">🏠 Dashboard</a>
+    <a href="complaints.html">📋 Complaints</a>
+    <a href="employees.html">👨‍🔧 Employees</a>
+    <a href="tracking.html">📍 Tracking</a>
+    <a href="reports.html">📊 Reports</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <h3>Dashboard Overview</h3>
+        <div class="profile">Admin</div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- CARDS -->
+        <div class="cards">
+
+            <div class="card blue">
+                <h4>Total Employees</h4>
+                <h2 id="totalEmployees">25</h2>
+            </div>
+
+            <div class="card green">
+                <h4>Active Employees</h4>
+                <h2 id="activeEmployees">18</h2>
+            </div>
+
+            <div class="card red">
+                <h4>Offline Employees</h4>
+                <h2 id="offlineEmployees">7</h2>
+            </div>
+
+            <div class="card orange">
+                <h4>Busy (Working)</h4>
+                <h2 id="busyEmployees">10</h2>
+            </div>
+
+            <div class="card purple">
+                <h4>Free Employees</h4>
+                <h2 id="freeEmployees">8</h2>
+            </div>
+
+            <div class="card blue">
+                <h4>Total Complaints</h4>
+                <h2 id="totalComplaints">42</h2>
+            </div>
+
+            <div class="card orange">
+                <h4>Pending Tasks</h4>
+                <h2 id="pendingTasks">12</h2>
+                <span class="status pending">Pending</span>
+            </div>
+
+            <div class="card blue">
+                <h4>In Progress</h4>
+                <h2 id="progressTasks">20</h2>
+                <span class="status progress">In Progress</span>
+            </div>
+
+            <div class="card green">
+                <h4>Completed Tasks</h4>
+                <h2 id="completedTasks">10</h2>
+                <span class="status completed">Completed</span>
+            </div>
+
+        </div>
+
+        <!-- CHARTS / ANALYTICS -->
+        <div class="charts-container">
+            <!-- Bar Chart -->
+            <div class="chart-box">
+                <h4>📊 Tasks by Status</h4>
+                <canvas id="barChart" width="350" height="250"></canvas>
+            </div>
+
+            <!-- Pie Chart -->
+            <div class="chart-box">
+                <h4>👥 Employee Status Distribution</h4>
+                <canvas id="pieChart" width="350" height="250"></canvas>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="topbar">
+    <h3 id="pageTitle">Dashboard</h3>
+
+    <div class="admin-info">
+        <span class="admin-name" id="adminName">Admin</span>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+</div>
+
+<script>
+// Dashboard Analytics
+function drawBarChart() {
+    const canvas = document.getElementById('barChart');
+    const ctx = canvas.getContext('2d');
+    
+    // Data from the cards above
+    const pending = 12;
+    const inProgress = 20;
+    const completed = 10;
+    const maxValue = 25;
+    
+    const barWidth = 60;
+    const barX = [50, 150, 250];
+    const barHeight = (value) => (value / maxValue) * 200;
+    const colors = ['#fbbf24', '#60a5fa', '#4ade80'];
+    const labels = ['Pending', 'In Progress', 'Completed'];
+    const values = [pending, inProgress, completed];
+    
+    // Draw background
+    ctx.fillStyle = '#f4f6f9';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw bars
+    values.forEach((value, index) => {
+        const height = barHeight(value);
+        ctx.fillStyle = colors[index];
+        ctx.fillRect(barX[index], canvas.height - 60 - height, barWidth, height);
+        
+        // Draw value on top
+        ctx.fillStyle = '#1e293b';
+        ctx.font = 'bold 14px segoe ui';
+        ctx.textAlign = 'center';
+        ctx.fillText(value, barX[index] + barWidth/2, canvas.height - 65 - height);
+    });
+    
+    // Draw labels
+    ctx.fillStyle = '#64748b';
+    ctx.font = '12px segoe ui';
+    labels.forEach((label, index) => {
+        ctx.fillText(label, barX[index] + barWidth/2, canvas.height - 20);
+    });
+    
+    // Draw Y-axis
+    ctx.strokeStyle = '#e2e8f0';
+    ctx.beginPath();
+    ctx.moveTo(30, 30);
+    ctx.lineTo(30, canvas.height - 50);
+    ctx.stroke();
+}
+
+function drawPieChart() {
+    const canvas = document.getElementById('pieChart');
+    const ctx = canvas.getContext('2d');
+    
+    // Employee status data
+    const active = 18;
+    const offline = 7;
+    const total = 25;
+    
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = 80;
+    
+    // Draw background
+    ctx.fillStyle = '#f4f6f9';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Calculate angles
+    const activeAngle = (active / total) * Math.PI * 2;
+    const offlineAngle = (offline / total) * Math.PI * 2;
+    
+    // Draw active slice (green)
+    ctx.fillStyle = '#22c55e';
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.arc(centerX, centerY, radius, -Math.PI / 2, -Math.PI / 2 + activeAngle);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Draw offline slice (red)
+    ctx.fillStyle = '#ef4444';
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.arc(centerX, centerY, radius, -Math.PI / 2 + activeAngle, -Math.PI / 2 + activeAngle + offlineAngle);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Draw legend
+    ctx.fillStyle = '#22c55e';
+    ctx.fillRect(20, canvas.height - 60, 15, 15);
+    ctx.fillStyle = '#1e293b';
+    ctx.font = '12px segoe ui';
+    ctx.fillText(`Active: ${active}`, 40, canvas.height - 48);
+    
+    ctx.fillStyle = '#ef4444';
+    ctx.fillRect(20, canvas.height - 35, 15, 15);
+    ctx.fillStyle = '#1e293b';
+    ctx.fillText(`Offline: ${offline}`, 40, canvas.height - 23);
+}
+
+// Draw charts when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    drawBarChart();
+    drawPieChart();
+    console.log("Dashboard Analytics Loaded");
+});
+
+// Logout function
+function logout() {
+    alert("Logged out!");
+}
+</script>
+
+</body>
+</html>

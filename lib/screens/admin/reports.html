@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports Management</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    display: flex;
+    background: #f4f6f9;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #1e293b;
+    color: white;
+    padding: 20px;
+    position: fixed;
+}
+
+.sidebar h2 {
+    margin-bottom: 30px;
+}
+
+.sidebar a {
+    display: block;
+    color: #cbd5e1;
+    text-decoration: none;
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.sidebar a:hover {
+    background: #334155;
+}
+
+/* MAIN */
+.main {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+}
+
+/* TOPBAR */
+.topbar {
+    height: 70px;
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* CONTENT */
+.content {
+    padding: 25px;
+}
+
+/* CARD */
+.report-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* IMAGES */
+.images {
+    display: flex;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.images img {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+/* STATUS */
+.status {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    display: inline-block;
+}
+
+.pending { background: #fef3c7; color: #92400e; }
+.approved { background: #dcfce7; color: #166534; }
+.rejected { background: #fee2e2; color: #991b1b; }
+
+/* BUTTONS */
+button {
+    padding: 6px 12px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.approve-btn {
+    background: #22c55e;
+    color: white;
+}
+
+.reject-btn {
+    background: #ef4444;
+    color: white;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="complaints.html">📋 Complaints</a>
+    <a href="employees.html">👨‍🔧 Employees</a>
+    <a href="tracking.html">📍 Tracking</a>
+    <a href="reports.html" class="active">📊 Reports</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <h3>Completed Task Reports</h3>
+        <div>Admin</div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- REPORT 1 -->
+        <div class="report-card">
+            <h4>Complaint #101 - Road Damage</h4>
+            <p><b>Employee:</b> Worker A</p>
+            <p><b>Notes:</b> Road repaired successfully and cleaned.</p>
+
+            <div class="images">
+                <img src="https://via.placeholder.com/150" alt="Before">
+                <img src="https://via.placeholder.com/150" alt="After">
+            </div>
+
+            <span id="status-1" class="status pending">Pending Review</span>
+
+            <div style="margin-top: 10px;">
+                <button class="approve-btn" onclick="approveReport(1)">Approve</button>
+                <button class="reject-btn" onclick="rejectReport(1)">Reject</button>
+            </div>
+        </div>
+
+        <!-- REPORT 2 -->
+        <div class="report-card">
+            <h4>Complaint #102 - Water Leakage</h4>
+            <p><b>Employee:</b> Worker B</p>
+            <p><b>Notes:</b> Pipe fixed and leakage stopped.</p>
+
+            <div class="images">
+                <img src="https://via.placeholder.com/150" alt="Before">
+                <img src="https://via.placeholder.com/150" alt="After">
+            </div>
+
+            <span id="status-2" class="status pending">Pending Review</span>
+
+            <div style="margin-top: 10px;">
+                <button class="approve-btn" onclick="approveReport(2)">Approve</button>
+                <button class="reject-btn" onclick="rejectReport(2)">Reject</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function approveReport(id) {
+    const status = document.getElementById(`status-${id}`);
+    status.innerText = "Approved";
+    status.className = "status approved";
+    alert("Report Approved");
+}
+
+function rejectReport(id) {
+    const status = document.getElementById(`status-${id}`);
+    status.innerText = "Rejected";
+    status.className = "status rejected";
+    alert("Report Rejected");
+}
+</script>
+
+</body>
+</html>

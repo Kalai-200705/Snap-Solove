@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Management</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    display: flex;
+    background: #f4f6f9;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #1e293b;
+    color: white;
+    padding: 20px;
+    position: fixed;
+}
+
+.sidebar h2 {
+    margin-bottom: 30px;
+}
+
+.sidebar a {
+    display: block;
+    color: #cbd5e1;
+    text-decoration: none;
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.sidebar a:hover {
+    background: #334155;
+    color: white;
+}
+
+/* MAIN */
+.main {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+}
+
+/* TOPBAR */
+.topbar {
+    height: 70px;
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* CONTENT */
+.content {
+    padding: 25px;
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background: #1e293b;
+    color: white;
+}
+
+tr:hover {
+    background: #f9fafb;
+}
+
+/* STATUS BADGES */
+.status {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* COLORS */
+.active { background: #dbeafe; color: #1e40af; }
+.busy { background: #fef3c7; color: #92400e; }
+.free { background: #dcfce7; color: #166534; }
+.offline { background: #fee2e2; color: #991b1b; }
+
+/* BUTTON */
+button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    background: #3b82f6;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #2563eb;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="complaints.html">📋 Complaints</a>
+    <a href="employees.html" class="active">👨‍🔧 Employees</a>
+    <a href="tracking.html">📍 Tracking</a>
+    <a href="reports.html">📊 Reports</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <h3>Employee Management</h3>
+        <div>Admin</div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Current Task</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <!-- EMPLOYEE 1 -->
+                <tr>
+                    <td>#E01</td>
+                    <td>Worker A</td>
+                    <td>
+                        <span id="status-1" class="status free">Free</span>
+                    </td>
+                    <td id="task-1">No Task</td>
+                </tr>
+
+                <!-- EMPLOYEE 2 -->
+                <tr>
+                    <td>#E02</td>
+                    <td>Worker B</td>
+                    <td>
+                        <span id="status-2" class="status busy">Busy</span>
+                    </td>
+                    <td id="task-2">Water Leakage</td>
+                </tr>
+
+                <!-- EMPLOYEE 3 -->
+                <tr>
+                    <td>#E03</td>
+                    <td>Worker C</td>
+                    <td>
+                        <span id="status-3" class="status active">Active</span>
+                    </td>
+                    <td id="task-3">Road Repair</td>
+                </tr>
+
+                <!-- EMPLOYEE 4 -->
+                <tr>
+                    <td>#E04</td>
+                    <td>Worker D</td>
+                    <td>
+                        <span id="status-4" class="status offline">Offline</span>
+                    </td>
+                    <td id="task-4">No Task</td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<script>
+// Employee management loaded
+console.log("Employee Management Loaded");
+</script>
+
+</body>
+</html>

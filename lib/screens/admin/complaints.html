@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complaints Management</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    display: flex;
+    background: #f4f6f9;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #1e293b;
+    color: white;
+    padding: 20px;
+    position: fixed;
+}
+
+.sidebar h2 {
+    margin-bottom: 30px;
+}
+
+.sidebar a {
+    display: block;
+    color: #cbd5e1;
+    text-decoration: none;
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.sidebar a:hover {
+    background: #334155;
+    color: white;
+}
+
+/* MAIN */
+.main {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+}
+
+/* TOPBAR */
+.topbar {
+    height: 70px;
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* CONTENT */
+.content {
+    padding: 25px;
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background: #1e293b;
+    color: white;
+}
+
+tr:hover {
+    background: #f9fafb;
+}
+
+/* STATUS */
+.status {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.pending { background: #fef3c7; color: #92400e; }
+.progress { background: #dbeafe; color: #1e40af; }
+.completed { background: #dcfce7; color: #166534; }
+
+/* INPUTS */
+select, textarea {
+    width: 100%;
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+textarea {
+    resize: none;
+}
+
+/* BUTTON */
+button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    background: #3b82f6;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #2563eb;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="complaints.html" class="active">📋 Complaints</a>
+    <a href="employees.html">👨‍🔧 Employees</a>
+    <a href="tracking.html">📍 Tracking</a>
+    <a href="reports.html">📊 Reports</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <h3>Complaints Management</h3>
+        <div>Admin</div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Issue</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Assign Employee</th>
+                    <th>Admin Notes</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="complaintTable">
+
+                <!-- ROW 1 -->
+                <tr>
+                    <td>#101</td>
+                    <td>Road Damage</td>
+                    <td>Chennai</td>
+
+                    <td>
+                        <span class="status pending" id="status-1">Pending</span>
+                    </td>
+
+                    <td>
+                        <select id="employee-1">
+                            <option>Select</option>
+                            <option>Send to All Workers</option>
+                            <option>Worker A</option>
+                            <option>Worker B</option>
+                        </select>
+                    </td>
+
+                    <td>
+                        <textarea id="note-1" rows="2"></textarea>
+                    </td>
+
+                    <td>
+                        <button onclick="updateTask(1)">Assign</button>
+                    </td>
+                </tr>
+
+                <!-- ROW 2 -->
+                <tr>
+                    <td>#102</td>
+                    <td>Water Leakage</td>
+                    <td>Madurai</td>
+
+                    <td>
+                        <span class="status pending" id="status-2">Pending</span>
+                    </td>
+
+                    <td>
+                        <select id="employee-2">
+                            <option>Select</option>
+                            <option>Send to All Workers</option>
+                            <option>Worker A</option>
+                            <option>Worker B</option>
+                        </select>
+                    </td>
+
+                    <td>
+                        <textarea id="note-2" rows="2"></textarea>
+                    </td>
+
+                    <td>
+                        <button onclick="updateTask(2)">Assign</button>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<script>
+function updateTask(id) {
+    const employee = document.getElementById(`employee-${id}`).value;
+    const note = document.getElementById(`note-${id}`).value;
+    const statusElement = document.getElementById(`status-${id}`);
+
+    if (employee === "Select") {
+        alert("Please assign an employee");
+        return;
+    }
+
+    // Change status logic
+    if (statusElement.innerText === "Pending") {
+        statusElement.innerText = "In Progress";
+        statusElement.className = "status progress";
+    } else if (statusElement.innerText === "In Progress") {
+        statusElement.innerText = "Completed";
+        statusElement.className = "status completed";
+    }
+
+    console.log({
+        complaintId: id,
+        assignedTo: employee,
+        adminNote: note,
+        status: statusElement.innerText
+    });
+
+    alert("Updated Successfully!");
+}
+</script>
+
+</body>
+</html>
