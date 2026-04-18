@@ -35,7 +35,7 @@ class RoleSelectionScreen extends StatelessWidget {
               context,
               icon: Icons.person,
               text: "Citizen",
-              route: '/login',
+              route: '/citizen-login',
             ),
 
             const SizedBox(height: 20),

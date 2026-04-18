@@ -1,33 +1,26 @@
 import 'package:flutter/material.dart';
 
 import '../screens/auth/role_selection_screen.dart';
-import '../screens/citizen/citizen_homescreen.dart';
-import '../screens/citizen/citizen_login_screen.dart';
-import '../screens/citizen/citizen_report_issue_screen.dart';
-import '../screens/citizen/forgot_password_screen.dart';
-import '../screens/citizen/issue_detail_screen.dart';
-import '../screens/citizen/signup_screen.dart';
-
-// ignore: unused_import
+import '../screens/auth/citizen_login_screen.dart';
+import '../screens/citizen/dashboard_screen.dart';
+import '../screens/citizen/report_issue_screen.dart';
+import '../screens/citizen/profile_page.dart';
+import '../screens/citizen/track_issue_screen.dart';
+import '../screens/citizen/settings_screen.dart';
+import '../screens/citizen/notification_screen.dart';
+import '../screens/citizen/feedback_screen.dart';
 import '../screens/employee/employee_login_screen.dart';
 
 Map<String, WidgetBuilder> routes = {
   '/': (context) => RoleSelectionScreen(),
-
-  '/login': (context) => LoginScreen(),
-
-  '/home': (context) => const HomeScreen(),
-
-  '/report-issue': (context) => const CitizenReportIssueScreen(),
-
-  '/issue-detail': (context) {
-    final issueType = ModalRoute.of(context)?.settings.arguments as String?;
-    return IssueDetailScreen(issueType: issueType ?? "");
-  },
-
+  '/login': (context) => RoleSelectionScreen(),
+  '/citizen-login': (context) => const CitizenLoginScreen(),
+  '/home': (context) => const DashboardScreen(),
+  '/report-issue': (context) => const ReportIssueScreen(),
+  '/profile': (context) => const ProfilePage(),
+  '/track-issue': (context) => const TrackIssueScreen(),
+  '/settings': (context) => const SettingsScreen(),
+  '/notifications': (context) => const NotificationsScreen(),
+  '/feedback': (context) => const FeedbackScreen(),
   '/employee-login': (context) => const EmployeeLoginScreen(),
-
-  // ✅ ADD THESE
-  '/forgot-password': (context) => ForgotPasswordScreen(),
-  '/signup': (context) => SignupScreen(),
 };
